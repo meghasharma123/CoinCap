@@ -9,15 +9,18 @@
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
 }
 body{
   margin: 0;
 }
 .table{
   padding: 10px;
-  margin: 1rem;
   padding: 1rem;
   width: inherit;
+  display: flex;
+  justify-content: center;
 }
 .viewMore{
   display: flex;
@@ -40,3 +43,18 @@ button{
   padding: 0.8rem;
   transition: transform 0.2s ease 0s;
 }
+.selectOption{
+  width: 10rem;
+  margin-top: 1rem;
+  height: 2rem;
+}
+.dropDown{
+  display: flex;
+  justify-content: center;
+}
+option{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+

@@ -2,7 +2,6 @@ table {
     border-spacing: 0;
     border: 1px solid #d1cccc;
     width: 90%;
-    margin: inherit;
   }
   
   tr:last-child td {

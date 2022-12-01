@@ -2,12 +2,27 @@ import './App.css';
 import './Component/Table'
 import React, { useMemo, useState, useEffect } from 'react';
 import Table from './Component/Table';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import IconButton from '@mui/material/IconButton';
+import favIcon from './favorite-border.256x225.png'
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MuiMenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 function App() {
   const [data, setData] = useState([]);
   const [tableVal, setTableVal] = useState(20)
   const [options, setOptions] = useState([]);
   const [faits, setFaits] = useState('INR');
+  const [favcolor,setFavColor] = useState('#ef77')
+  const MenuItem = styled(MuiMenuItem)(({ theme }) => ({
+    '& .MuiSvgIcon-root': {
+      marginRight: theme.spacing(4),
+      backgroundColor: `${favcolor}`
+    },
+  }));
+  
   const columns = useMemo(
     () => [
       {
@@ -89,6 +104,16 @@ function App() {
   const handleOption = (e) => {
     setFaits(e.target.value)
   }
+  const handleFavColor = () =>{
+    setFavColor(prev=>{
+      if(prev === '#ef77'){
+        return '#e00d0d'
+      }
+      else{
+        return '#ef77'
+      }
+    })
+  }
 
   useEffect(() => {
     fetch('https://api.coinstats.app/public/v1/coins?skip=0&limit=' + tableVal + '&currency=' + faits).then((ele) => ele.json()).then((ele) => setData(ele.coins))
@@ -101,11 +126,35 @@ function App() {
   return (
     <div className="App">
       <div className='dropDown'>
-        <select className='selectOption' onChange={handleOption} placeholder="INR" value={faits}>
+        {/* <select className='selectOption' onChange={handleOption} placeholder="INR" value={faits}>
+        <img src={favIcon} alt="No"/>
           {options.map((option) => (
-            <option key={option.name} value={option.name}>{option.name} Hii</option>
+            <option data-content={<img src={favIcon} alt="No"/>} key={option.name} value={option.name}>{option.name}
+            <IconButton
+              key="heart"
+              sx={{ color: "white" }}
+            >
+      <FavoriteBorderIcon />
+      <img src={favIcon} alt="No"/>
+    </IconButton>
+            </option>
           ))}
-        </select>
+        </select> */}
+        <Select
+          labelId="demo-simple-select-helper-label"
+          id="demo-simple-select-helper"
+          value={faits}
+          onChange={handleOption}
+          className='selectOption'
+          placeholder="INR"
+        >
+          {options.map((option) => (
+            <MenuItem key={option.name} value={option.name}>
+              <FavoriteBorderIcon onClick={handleFavColor} />
+              {option.name}
+            </MenuItem>
+          ))}
+        </Select>
       </div>
       <div className='table'>
         {

@@ -57,4 +57,9 @@ option{
   flex-direction: row;
   justify-content: center;
 }
-
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  display: flex;
+  justify-content: space-evenly;
+}

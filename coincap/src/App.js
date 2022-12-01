@@ -1,6 +1,6 @@
 import './App.css';
 import './Component/Table'
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Table from './Component/Table';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Select,{ components } from 'react-select'
@@ -10,22 +10,29 @@ function App() {
   const [tableVal, setTableVal] = useState(20)
   const [options, setOptions] = useState([]);
   const [faits, setFaits] = useState('INR');
-  const [favName,setFavName] = useState('general')
   const [selectedValue, setSelectedValue] = useState([]);
   const { Option } = components;
 
- const CustomOption = props => (
-  <Option {...props}>
-    <span>{<FavoriteBorderIcon onClick={handleFavColor} className={favName} style={{marginRight:'12px'}}/>}</span>
+ const CustomOption = props => {
+  return <Option {...props}>
+    <span>{<FavoriteBorderIcon style={{cursor:'pointer',marginRight:'12px',fill:selectedValue.includes(props.data.name)?'#F92665':'inherit'}}/>}</span>
     {
        props.data.symbol+"\t"+props.data.name
     }
   </Option>
-);
+ }
+ const customStyles = () => ({
+  option: (provided, state) => ({
+    ...provided,
+    alignItems: "baseline",
+    backgroundColor: "#fff",
+    color:'#000'
+  })
+});
 
   
-  const columns = useMemo(
-    () => [
+  const columns = useRef(
+     [
       {
         Header: "Rank",
         accessor: "rank"
@@ -104,18 +111,25 @@ function App() {
 
   const handleOption = (e) => {
     setFaits(e.name)
-    setSelectedValue(e);
+    if(selectedValue.length<3){
+      setSelectedValue(prev=>[...prev,e.name]);
+    }
+    if(selectedValue.includes(e.name)){
+      setSelectedValue(prev=>prev.filter((val)=>val !== e.name));
+    }
   }
-  const handleFavColor = () =>{
-    setFavName(prev=>{
-      if(prev === 'general'){
-        return 'fav'
+  useEffect(()=>{
+    let temp = [];
+    options.map((e)=>{
+      if(selectedValue.includes(e.name)){
+        temp.unshift(e)
       }
       else{
-        return 'general'
+        temp.push(e);
       }
     })
-  }
+    setOptions(temp);
+  },[selectedValue])
 
   useEffect(() => {
     fetch('https://api.coinstats.app/public/v1/coins?skip=0&limit=' + tableVal + '&currency=' + faits).then((ele) => ele.json()).then((ele) => setData(ele.coins))
@@ -135,16 +149,12 @@ function App() {
           placeholder="INR"
           options={options}
           components={{ Option: CustomOption }}
-          option= {(provided, state) => ({
-            ...provided,
-            backgroundColor: state.isSelected ? '#192E49' : 'inherit',
-            '&:hover': { backgroundColor: state.isSelected ? '#192E49' : 'rgb(222, 235, 255)' }
-          })}
+          styles={customStyles()}
         />
       </div>
-      <div className='table'>
+      <div className='tableComponent'>
         {
-          data.length > 0 ? <Table data={data} columns={columns} /> : ''
+          data.length > 0 ? <Table data={data} columns={columns.current} /> : ''
         }
       </div>
       <div className='viewMore'>

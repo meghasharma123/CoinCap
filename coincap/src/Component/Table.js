@@ -14,7 +14,7 @@ const Table = ({ data, columns }) => {
             columns,
             data
         },
-        useSortBy // This plugin Hook will help to sort our table columns
+        useSortBy
     );
     return (
         <table {...getTableProps()}>

@@ -3,25 +3,26 @@ import './Component/Table'
 import React, { useMemo, useState, useEffect } from 'react';
 import Table from './Component/Table';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import IconButton from '@mui/material/IconButton';
-import favIcon from './favorite-border.256x225.png'
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MuiMenuItem from '@mui/material/MenuItem';
-import { styled } from '@mui/material/styles';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import Select,{ components } from 'react-select'
 
 function App() {
   const [data, setData] = useState([]);
   const [tableVal, setTableVal] = useState(20)
   const [options, setOptions] = useState([]);
   const [faits, setFaits] = useState('INR');
-  const [favcolor,setFavColor] = useState('#ef77')
-  const MenuItem = styled(MuiMenuItem)(({ theme }) => ({
-    '& .MuiSvgIcon-root': {
-      marginRight: theme.spacing(4),
-      backgroundColor: `${favcolor}`
-    },
-  }));
+  const [favName,setFavName] = useState('general')
+  const [selectedValue, setSelectedValue] = useState([]);
+  const { Option } = components;
+
+ const CustomOption = props => (
+  <Option {...props}>
+    <span>{<FavoriteBorderIcon onClick={handleFavColor} className={favName} style={{marginRight:'12px'}}/>}</span>
+    {
+       props.data.symbol+"\t"+props.data.name
+    }
+  </Option>
+);
+
   
   const columns = useMemo(
     () => [
@@ -52,7 +53,7 @@ function App() {
           const marC = (value / 1000000).toFixed(2);
           return (
             <>
-              {marC > 0 ? `${marC}m` : ""}
+              {marC > 0 ? `${marC}m` : "0"}
             </>
           );
         }
@@ -64,7 +65,7 @@ function App() {
           const vol = (value / 1000).toFixed(2);
           return (
             <>
-              {vol > 0 ? `${vol}k` : ""}
+              {vol > 0 ? `${vol}k` : "0"}
             </>
           );
         }
@@ -76,7 +77,7 @@ function App() {
           const vol = (value / 1000).toFixed(2);
           return (
             <>
-              {vol > 0 ? `${vol}k` : ""}
+              {vol > 0 ? `${vol}k` : "0"}
             </>
           );
         }
@@ -102,15 +103,16 @@ function App() {
   }
 
   const handleOption = (e) => {
-    setFaits(e.target.value)
+    setFaits(e.name)
+    setSelectedValue(e);
   }
   const handleFavColor = () =>{
-    setFavColor(prev=>{
-      if(prev === '#ef77'){
-        return '#e00d0d'
+    setFavName(prev=>{
+      if(prev === 'general'){
+        return 'fav'
       }
       else{
-        return '#ef77'
+        return 'general'
       }
     })
   }
@@ -126,35 +128,19 @@ function App() {
   return (
     <div className="App">
       <div className='dropDown'>
-        {/* <select className='selectOption' onChange={handleOption} placeholder="INR" value={faits}>
-        <img src={favIcon} alt="No"/>
-          {options.map((option) => (
-            <option data-content={<img src={favIcon} alt="No"/>} key={option.name} value={option.name}>{option.name}
-            <IconButton
-              key="heart"
-              sx={{ color: "white" }}
-            >
-      <FavoriteBorderIcon />
-      <img src={favIcon} alt="No"/>
-    </IconButton>
-            </option>
-          ))}
-        </select> */}
         <Select
-          labelId="demo-simple-select-helper-label"
-          id="demo-simple-select-helper"
-          value={faits}
+          value={{label : faits}}
           onChange={handleOption}
           className='selectOption'
           placeholder="INR"
-        >
-          {options.map((option) => (
-            <MenuItem key={option.name} value={option.name}>
-              <FavoriteBorderIcon onClick={handleFavColor} />
-              {option.name}
-            </MenuItem>
-          ))}
-        </Select>
+          options={options}
+          components={{ Option: CustomOption }}
+          option= {(provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected ? '#192E49' : 'inherit',
+            '&:hover': { backgroundColor: state.isSelected ? '#192E49' : 'rgb(222, 235, 255)' }
+          })}
+        />
       </div>
       <div className='table'>
         {

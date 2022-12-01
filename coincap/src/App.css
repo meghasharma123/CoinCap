@@ -52,14 +52,9 @@ button{
   display: flex;
   justify-content: center;
 }
-option{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+.general{
+  background-color: #ef77;
 }
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  display: flex;
-  justify-content: space-evenly;
+.fav{
+  background-color: #e00d0d;
 }
